@@ -1,26 +1,36 @@
 package ro.msg.learning.shop.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Data
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
+
     private String name;
+
     private String description;
     // EUR
     private BigDecimal price;
     // KG
     private Double weight;
-    @ManyToOne
-    @JoinColumn(name = "category")
-    private ProductCategory category;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "productCategory")
+    private ProductCategory productCategory;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier")
     private Supplier supplier;
 
