@@ -5,32 +5,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class Product {
+@EqualsAndHashCode
+@Table(name = "OrderTable")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String name;
-
-    private String description;
-    // EUR
-    private BigDecimal price;
-    // KG
-    private Double weight;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "shipped_from")
+    private Location shippedFrom;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "productCategory")
-    private ProductCategory productCategory;
+    @JoinColumn(name = "customer")
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "supplier")
-    private Supplier supplier;
-
+    @JoinColumn(name = "address")
+    private Address address;
 }

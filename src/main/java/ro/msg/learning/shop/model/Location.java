@@ -5,10 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -22,14 +19,8 @@ public class Location {
 
     private String name;
 
-    private String addressCountry;
-
-    private String addressCity;
-
-    private String addressCounty;
-
-    private String addressStreet;
-
-    private Integer addressNumber;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "address")
+    private Address address;
 
 }
