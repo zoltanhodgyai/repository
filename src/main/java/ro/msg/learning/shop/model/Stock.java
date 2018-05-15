@@ -3,22 +3,16 @@ package ro.msg.learning.shop.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Data
-@IdClass(StockKey.class)
 public class Stock {
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product")
-    private Product product;
+    @EmbeddedId
+    private StockKey stockKey;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "location")
-    private Location location;
-
+    @Positive
     private Integer quantity;
 
 }

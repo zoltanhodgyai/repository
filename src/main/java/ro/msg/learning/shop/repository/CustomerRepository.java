@@ -19,4 +19,7 @@ public interface CustomerRepository extends Repository<Customer, Integer> {
 
     @Transactional
     void deleteCustomerById(Integer id);
+
+    @Transactional(readOnly = true)
+    Customer findCustomerByUsername(String username);
 }
