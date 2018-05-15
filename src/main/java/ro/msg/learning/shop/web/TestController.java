@@ -21,4 +21,10 @@ public class TestController {
 
         return "index";
     }
+
+    @RequestMapping("/first")
+    public String first() {
+        return "first";
+    }
+
 }

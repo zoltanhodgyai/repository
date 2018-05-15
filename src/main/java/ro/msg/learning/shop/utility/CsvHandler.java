@@ -1,29 +1,38 @@
 package ro.msg.learning.shop.utility;
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.converter.AbstractGenericHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Component;
-import ro.msg.learning.shop.model.Stock;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
+@Slf4j
 @Component
-public class CsvHandler {
+@SuppressWarnings("unchecked")
+public class CsvHandler<T> extends AbstractGenericHttpMessageConverter<List<T>> {
 
-    public List<Stock> fromCsv(InputStream inputStream, Stock stock) {
-        return new ArrayList<>();
+    @Override
+    public List<T> read(Type type, Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+        return CsvConverter.fromCsv(httpInputMessage.getBody(), aClass, type);
     }
 
-    public void toCsv(OutputStream outputStream, List<Stock> stocks) throws IOException {
+    @Override
+    public void writeInternal(List<T> ts, Type type, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+        // cast ts maybe
+        // cosntrangeri: tre sa fie o lista
+        // tre sa fie ParameterizedType (getRawType(), getActualTypeArguments())
+        CsvConverter.toCsv(httpOutputMessage.getBody(), null, null, ts);
+    }
 
-        CsvMapper mapper = new CsvMapper();
-
-        CsvSchema schema = mapper.schemaFor(Stock.class);
-
-        String s = mapper.writer(schema.withUseHeader(true)).writeValueAsString(stocks);
+    @Override
+    protected List<T> readInternal(Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+        return CsvConverter.fromCsv(httpInputMessage.getBody(), aClass, null);
     }
 }
