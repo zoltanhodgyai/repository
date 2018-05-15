@@ -1,20 +1,24 @@
 package ro.msg.learning.shop;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.StockRepository;
-import ro.msg.learning.shop.utility.CsvHandler;
+import ro.msg.learning.shop.utility.DTOConverter;
+import ro.msg.learning.shop.utility.CsvConverter;
 
 import java.io.*;
-import java.nio.file.Files;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -22,19 +26,27 @@ import java.util.List;
 @TestPropertySource(locations="classpath:application-test.properties")
 @Sql({"/test.sql"})
 @Slf4j
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CsvHandlerTests {
 
     @Autowired
     StockRepository stockRepository;
 
-    @Autowired
-    private CsvHandler csvHandler;
-
     @Test
     public void testCreateCsv() throws IOException {
         List<Stock> stocks = stockRepository.findAll();
 
-        OutputStream outputStream =  new FileOutputStream("ALMA.csv");
-        csvHandler.toCsv(outputStream, stocks);
+        OutputStream outputStream =  new FileOutputStream("test.csv");
+        CsvConverter.toCsv(outputStream, StockDTO.class, new StockDTO(), DTOConverter.toStockDTOS(stocks));
+    }
+
+    @Test
+    public void testReadCsv() throws IOException {
+        InputStream inputStream = new FileInputStream("test.csv");
+
+        List<StockDTO> stocks = CsvConverter.fromCsv(inputStream, StockDTO.class, new StockDTO());
+
+        Assert.assertNotNull(stocks);
+        Assert.assertEquals(8, stocks.size());
     }
 }

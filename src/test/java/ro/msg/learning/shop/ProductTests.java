@@ -135,7 +135,7 @@ public class ProductTests {
 
         productRepository.deleteProductById(products.get(1).getId());
 
-        Assert.assertEquals(3, productRepository.findAll().size());
+        Assert.assertEquals(6, productRepository.findAll().size());
         Assert.assertNull(productRepository.findProductById(2));
     }
 
@@ -146,7 +146,7 @@ public class ProductTests {
         List<Product> products = productRepository.findAll();
 
         Assert.assertNotNull(products);
-        Assert.assertEquals(4, products.size());
+        Assert.assertEquals(7, products.size());
     }
 
     @Test

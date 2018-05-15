@@ -13,6 +13,7 @@ class ShopTest {
     static final String CUSTOMER_FIRST_NAME = "First Name";
     static final String CUSTOMER_LAST_NAME = "Last Name";
     static final String CUSTOMER_USER_NAME = "User Name";
+    static final String CUSTOMER_PASSWORD = "CustomerPassword";
 
     Address getAddress(String country, String city, String county, String street) {
         Address address = new Address();
@@ -28,12 +29,13 @@ class ShopTest {
         return getAddress(COUNTRY, CITY, COUNTY, STREET_ADDRESS);
     }
 
-    Customer getCustomer(String firstName, String lastName, String userName) {
+    Customer getCustomer(String firstName, String lastName, String userName, String password) {
         Customer customer = new Customer();
 
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         customer.setUsername(userName);
+        customer.setPassword(password);
 
         return customer;
     }

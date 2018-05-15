@@ -53,7 +53,7 @@ public class ProductCategoryTests {
 
         List<ProductCategory> productCategories = createProductCategories();
 
-        Assert.assertEquals(4, productCategories.size());
+        Assert.assertEquals(5, productCategories.size());
 
         ProductCategory productCategory = productCategoryRepository.findProductCategoryById(productCategories.get(1).getId());
 
@@ -93,11 +93,11 @@ public class ProductCategoryTests {
 
         List<ProductCategory> productCategories = createProductCategories();
 
-        Assert.assertEquals(4, productCategories.size());
+        Assert.assertEquals(5, productCategories.size());
 
         productCategoryRepository.deleteProductCategoryById(productCategories.get(1).getId());
 
-        Assert.assertEquals(3, productCategoryRepository.findAll().size());
+        Assert.assertEquals(4, productCategoryRepository.findAll().size());
         Assert.assertNull(productCategoryRepository.findProductCategoryById(2));
     }
 
@@ -108,7 +108,7 @@ public class ProductCategoryTests {
 
         List<ProductCategory> productCategories = productCategoryRepository.findAll();
 
-        Assert.assertEquals(4, productCategories.size());
+        Assert.assertEquals(5, productCategories.size());
     }
 
     private List<ProductCategory> createProductCategories() {

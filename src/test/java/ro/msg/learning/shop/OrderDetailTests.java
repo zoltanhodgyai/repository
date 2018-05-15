@@ -11,8 +11,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.model.OrderDetail;
+import ro.msg.learning.shop.model.OrderDetailKey;
 import ro.msg.learning.shop.model.Product;
-import ro.msg.learning.shop.repository.LocationRepository;
 import ro.msg.learning.shop.repository.OrderDetailRepository;
 import ro.msg.learning.shop.repository.OrderRepository;
 import ro.msg.learning.shop.repository.ProductRepository;
@@ -41,21 +41,21 @@ public class OrderDetailTests extends ShopTest {
         Assert.assertNotNull(product);
 
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setOrder(order);
-        orderDetail.setProduct(product);
+        OrderDetailKey orderDetailKey = new OrderDetailKey();
+        orderDetailKey.setOrder(order);
+        orderDetailKey.setProduct(product);
+        orderDetail.setOrderDetailKey(orderDetailKey);
         orderDetail.setQuantity(12);
 
-        orderDetailRepository.saveCustom(orderDetail.getOrder().getId(), orderDetail.getProduct().getId(), orderDetail.getQuantity());
-        // TODO @hodgyaiz: simple save(OD) not working. Use saveCustom instead
-        //OrderDetail created = orderDetailRepository.save(orderDetail);
-        //Assert.assertNotNull(created);
+        OrderDetail created = orderDetailRepository.save(orderDetail);
+        Assert.assertNotNull(created);
 
-        OrderDetail read = orderDetailRepository.findOrderDetailByOrderAndProduct(orderDetail.getOrder(), orderDetail.getProduct());
+        OrderDetail read = orderDetailRepository.findOrderDetailByOrderDetailKey(orderDetail.getOrderDetailKey());
         Assert.assertNotNull(read);
         Assert.assertEquals(orderDetail.getQuantity(), read.getQuantity());
         Assert.assertEquals(1, orderDetailRepository.findAll().size());
 
-        orderDetailRepository.deleteOrderDetailByOrderAndProduct(orderDetail.getOrder(), orderDetail.getProduct());
+        orderDetailRepository.deleteOrderDetailByOrderDetailKey(orderDetail.getOrderDetailKey());
         Assert.assertEquals(0, orderDetailRepository.findAll().size());
     }
 

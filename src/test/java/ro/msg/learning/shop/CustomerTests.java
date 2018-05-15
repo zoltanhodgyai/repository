@@ -6,11 +6,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.model.Customer;
-import ro.msg.learning.shop.repository.CustomerRepository;
+import ro.msg.learning.shop.service.CustomerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,10 @@ import java.util.List;
 public class CustomerTests extends ShopTest {
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerService customerService;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
     public void testReadCustomer() {
@@ -32,7 +36,7 @@ public class CustomerTests extends ShopTest {
 
         Assert.assertEquals(3, customers.size());
 
-        Customer customer = customerRepository.findCustomerById(customers.get(0).getId());
+        Customer customer = customerService.findCustomerById(customers.get(0).getId());
 
         Assert.assertNotNull(customer);
         Assert.assertNotNull(customer.getId());
@@ -42,9 +46,9 @@ public class CustomerTests extends ShopTest {
 
     @Test
     public void testCreateUpdateCustomer() {
-        Customer customer = getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME);
+        Customer customer = getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME, CUSTOMER_PASSWORD);
 
-        Customer created = customerRepository.save(customer);
+        Customer created = customerService.save(customer);
 
         Assert.assertNotNull(created);
         Assert.assertNotNull(created.getId());
@@ -52,7 +56,7 @@ public class CustomerTests extends ShopTest {
 
         created.setUsername("changedUsername");
 
-        Customer updated = customerRepository.save(created);
+        Customer updated = customerService.save(created);
 
         Assert.assertNotNull(updated);
         Assert.assertEquals(created.getId(), updated.getId());
@@ -64,28 +68,42 @@ public class CustomerTests extends ShopTest {
         List<Customer> customers = createCustomers();
         Assert.assertEquals(3, customers.size());
 
-        customerRepository.deleteCustomerById(customers.get(2).getId());
+        customerService.deleteCustomerById(customers.get(2).getId());
 
-        Assert.assertEquals(3, customerRepository.findAll().size());
+        Assert.assertEquals(3, customerService.findAll().size());
     }
 
     @Test
     public void testReadAll() {
         createCustomers();
 
-        Assert.assertEquals(4, customerRepository.findAll().size());
+        Assert.assertEquals(4, customerService.findAll().size());
+    }
+
+    public void testCustomerPasswords() {
+        createCustomers();
+
+        Customer customer = customerService.findCustomerByUsername(CUSTOMER_USER_NAME);
+
+        Assert.assertNotNull(customer);
+        Assert.assertEquals(bCryptPasswordEncoder.encode(CUSTOMER_PASSWORD), customer.getPassword());
     }
 
     private List<Customer> createCustomers() {
-        Customer customer1 = getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME);
-        Customer customer2 = getCustomer("Orsi", "Bocskai", "orsika");
-        Customer customer3 = getCustomer("Lacika", "Hodgyai", "lacika92");
+        Customer customer1 = getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME, CUSTOMER_PASSWORD);
+        Customer customer2 = getCustomer("Orsi", "Bocskai", "orsika", "orsikapass");
+        Customer customer3 = getCustomer("Lacika", "Hodgyai", "lacika92", "lacikapass");
 
-        Customer c1 = customerRepository.save(customer1);
+        // kell egy login service
+        // s az utan, mindig vizsgalom a usert es azt hasznalom
+        // s akkor tudom hasznalni a createOrdert addig, amig meg nem hivodik a log out
+        // hmmmm???
+
+        Customer c1 = customerService.save(customer1);
         Assert.assertNotNull(c1);
-        Customer c2 = customerRepository.save(customer2);
+        Customer c2 = customerService.save(customer2);
         Assert.assertNotNull(c2);
-        Customer c3 = customerRepository.save(customer3);
+        Customer c3 = customerService.save(customer3);
         Assert.assertNotNull(c3);
 
         List<Customer> result = new ArrayList<>();

@@ -13,6 +13,7 @@ import ro.msg.learning.shop.model.Address;
 import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.repository.AddressRepository;
 import ro.msg.learning.shop.repository.LocationRepository;
+import ro.msg.learning.shop.service.OrderService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,11 @@ public class LocationTests extends ShopTest {
 
         List<Location> locations = createLocations(address);
 
-        Assert.assertEquals(4, locationRepository.findAll().size());
+        Assert.assertEquals(7, locationRepository.findAll().size());
 
         locationRepository.deleteLocationById(locations.get(0).getId());
 
-        Assert.assertEquals(3, locationRepository.findAll().size());
+        Assert.assertEquals(6, locationRepository.findAll().size());
     }
 
     @Test

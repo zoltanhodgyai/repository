@@ -60,7 +60,7 @@ public class SupplierTests {
 
         supplierRepository.deleteSupplierById(100);
 
-        Assert.assertEquals(1, supplierRepository.findAll().size());
+        Assert.assertEquals(2, supplierRepository.findAll().size());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class SupplierTests {
         Assert.assertNotNull(supplierRepository.save(new Supplier()));
         Assert.assertNotNull(supplierRepository.save(new Supplier()));
 
-        Assert.assertEquals(5, supplierRepository.findAll().size());
+        Assert.assertEquals(6, supplierRepository.findAll().size());
     }
 
 }

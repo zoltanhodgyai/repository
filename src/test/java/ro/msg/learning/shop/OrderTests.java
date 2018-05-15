@@ -43,7 +43,7 @@ public class OrderTests extends ShopTest {
         Address address = addressRepository.save(getAddress());
         Assert.assertNotNull(address);
 
-        Customer customer = customerRepository.save(getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME));
+        Customer customer = customerRepository.save(getCustomer(CUSTOMER_FIRST_NAME, CUSTOMER_LAST_NAME, CUSTOMER_USER_NAME, CUSTOMER_PASSWORD));
         Assert.assertNotNull(customer);
 
         Location location = new Location();
