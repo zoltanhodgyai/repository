@@ -49,8 +49,7 @@ public class StockServiceRestController {
             throw new NoStocksFoundException("No stocks found for the given location!");
         }
 
-        ParameterizedType parameterizedType = (ParameterizedType) new StockDTO();
-        csvHandler.writeInternal(stockDTOS, parameterizedType, new HttpOutputMessage() {
+        csvHandler.writeInternal(stockDTOS, StockDTO.class, new HttpOutputMessage() {
             @Override
             public OutputStream getBody() throws IOException {
                 return httpOutputMessage.getOutputStream();

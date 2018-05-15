@@ -17,9 +17,11 @@ import ro.msg.learning.shop.repository.AddressRepository;
 import ro.msg.learning.shop.repository.LocationRepository;
 import ro.msg.learning.shop.repository.ProductRepository;
 import ro.msg.learning.shop.repository.StockRepository;
+import ro.msg.learning.shop.service.CustomerService;
 import ro.msg.learning.shop.service.OrderService;
+import ro.msg.learning.shop.service.SecurityService;
 import ro.msg.learning.shop.service.StockService;
-import ro.msg.learning.shop.util.SingleLocationStrategy;
+import ro.msg.learning.shop.util.Strategy;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,13 +47,19 @@ public class StockTests {
     private AddressRepository addressRepository;
 
     @Autowired
-    private SingleLocationStrategy singleLocationStrategy;
+    private Strategy strategy;
 
     @Autowired
     private OrderService orderService;
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Test
     public void testStockFull() {
@@ -81,7 +89,7 @@ public class StockTests {
 
     @Test
     public void testSingleLocationStrategy() {
-        List<Location> locations = singleLocationStrategy.findLocation(getOrderDTO());
+        List<Location> locations = strategy.findLocation(getOrderDTO());
 
         Assert.assertNotNull(locations);
         Assert.assertEquals(1, locations.size());
@@ -91,6 +99,16 @@ public class StockTests {
 
     @Test
     public void testCreateOrderWithSingleLocationStrategy() {
+
+        Customer customer = new Customer();
+        customer.setFirstName("Test");
+        customer.setLastName("Test");
+        customer.setPassword("test");
+        customer.setUsername("testUser");
+        customerService.save(customer);
+
+        securityService.login("testUser", "test");
+
         Order order = orderService.createOrder(getOrderDTO());
 
         Assert.assertNotNull(order);

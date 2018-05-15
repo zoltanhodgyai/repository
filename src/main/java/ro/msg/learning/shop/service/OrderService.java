@@ -1,6 +1,7 @@
 package ro.msg.learning.shop.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.configuration.StrategyConfiguration;
 import ro.msg.learning.shop.dto.OrderDTO;
@@ -11,6 +12,7 @@ import ro.msg.learning.shop.repository.CustomerRepository;
 import ro.msg.learning.shop.repository.OrderDetailRepository;
 import ro.msg.learning.shop.repository.OrderRepository;
 import ro.msg.learning.shop.repository.StockRepository;
+import ro.msg.learning.shop.util.Strategy;
 
 import java.util.List;
 
@@ -28,20 +30,25 @@ public class OrderService {
 
     private final CustomerRepository customerRepository;
 
-    private final StrategyConfiguration strategyConfiguration;
+    private final SecurityService securityService;
 
-    public OrderService(StockRepository stockRepository, OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, CustomerRepository customerRepository, StrategyConfiguration strategyConfiguration) {
+    private final Strategy strategy;
+
+    public OrderService(StockRepository stockRepository, OrderRepository orderRepository,
+                        OrderDetailRepository orderDetailRepository, CustomerRepository customerRepository,
+                        SecurityService securityService, Strategy strategy) {
         this.stockRepository = stockRepository;
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.customerRepository = customerRepository;
-        this.strategyConfiguration = strategyConfiguration;
+        this.securityService = securityService;
+        this.strategy = strategy;
     }
 
     public Order createOrder(OrderDTO orderDTO) throws LocationNotFoundException {
 
         // get the single location where all of the products are found
-        List<Location> locations = strategyConfiguration.getStrategy(strategyType).findLocation(orderDTO);
+        List<Location> locations = strategy.findLocation(orderDTO);
         if (locations == null || locations.isEmpty()) {
             throw new LocationNotFoundException("No location was found!");
         }
@@ -60,9 +67,11 @@ public class OrderService {
         Order order = new Order();
         order.setShippedFrom(location);
         order.setAddress(orderDTO.getDeliveryAddress());
-        // TODO @hodgyaiz: for tests we just read a customer (id = 100)
-        // o sa luam din user (clientul logat)
-        order.setCustomer(customerRepository.findCustomerById(100));
+        String username = securityService.findLoggedInUsername();
+        if (username == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+        order.setCustomer(customerRepository.findCustomerByUsername(username));
         order = orderRepository.save(order);
         // save the Order Details (for every product)
         for (ProductDTO product : orderDTO.getProducts()) {

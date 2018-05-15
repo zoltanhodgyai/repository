@@ -3,6 +3,7 @@ package ro.msg.learning.shop.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import ro.msg.learning.shop.repository.LocationRepository;
 import ro.msg.learning.shop.repository.StockRepository;
 import ro.msg.learning.shop.util.MultipleLocationStrategy;
@@ -24,9 +25,9 @@ public class StrategyConfiguration {
         this.locationRepository = locationRepository;
     }
 
+    @Primary
     @Bean
     public Strategy getStrategy(@Value("${shop.strategy}") String strategyType) {
-        if (strategyType != null) {
             switch (strategyType) {
                 case SINGLE_LOCATION_STRATEGY:
                     return new SingleLocationStrategy(stockRepository, locationRepository);
@@ -35,7 +36,5 @@ public class StrategyConfiguration {
                 default:
                     return new SingleLocationStrategy(stockRepository, locationRepository);
             }
-        }
-        return null;
     }
 }

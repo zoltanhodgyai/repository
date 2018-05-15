@@ -25,7 +25,7 @@ public class CsvHandler<T> extends AbstractGenericHttpMessageConverter<List<T>> 
 
     @Override
     public void writeInternal(List<T> ts, Type type, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-        // cast ts maybe
+        // todo: cast ts maybe
         // cosntrangeri: tre sa fie o lista
         // tre sa fie ParameterizedType (getRawType(), getActualTypeArguments())
         CsvConverter.toCsv(httpOutputMessage.getBody(), null, null, ts);
