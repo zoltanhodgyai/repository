@@ -15,9 +15,9 @@ import java.util.List;
 public class MultipleLocationStrategy implements Strategy {
 
     @Override
-    public List<Location> findLocation(OrderDTO orderDTO) {
+    public Location findLocation(OrderDTO orderDTO) {
         log.info("Multiple Location Strategy called");
         log.info("Not implemented yet.");
-        return new ArrayList<>();
+        return null;
     }
 }

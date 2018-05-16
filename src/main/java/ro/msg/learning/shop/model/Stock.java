@@ -2,8 +2,9 @@ package ro.msg.learning.shop.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
-import javax.validation.constraints.Positive;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Data
@@ -12,7 +13,7 @@ public class Stock {
     @EmbeddedId
     private StockKey stockKey;
 
-    @Positive
+    @PositiveOrZero
     private Integer quantity;
 
 }

@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.model.Location;
 
-import java.util.List;
-
 @Component
 public class StrategyContext {
 
@@ -17,7 +15,7 @@ public class StrategyContext {
         this.strategy = strategy;
     }
 
-    public List<Location> findLocation(OrderDTO orderDTO) {
+    public Location findLocation(OrderDTO orderDTO) {
         return strategy.findLocation(orderDTO);
     }
 }

@@ -1,6 +1,5 @@
 package ro.msg.learning.shop.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +13,14 @@ import ro.msg.learning.shop.service.OrderService;
 @RequestMapping("/orderService")
 public class OrderServiceRestController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    public OrderServiceRestController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) throws LocationNotFoundException {
-        // todo @hodgyaiz: put back in parameters: @RequestBody OrderDTO orderDTO
-        // how do we construct a JSON request correctly? :P
-        // how do we resolve the JavassistLazyInitializer problem?
-
+    ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
         Order order = orderService.createOrder(orderDTO);
 
         //order.getShippedFrom().setAddress(null);

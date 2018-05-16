@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.exception.LocationIdMissingException;
 import ro.msg.learning.shop.exception.NoStocksFoundException;
-import ro.msg.learning.shop.exception.UserNotLoggedInException;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.service.StockService;
 import ro.msg.learning.shop.utility.CsvHandler;
@@ -17,7 +16,6 @@ import ro.msg.learning.shop.utility.DTOConverter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @ControllerAdvice

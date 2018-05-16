@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -33,6 +34,17 @@ import java.util.List;
 @Sql({"/test.sql"})
 @Slf4j
 public class StockTests {
+
+    private static final String WITH_PROXIMITY = "WithProximity";
+
+    @Value("${shop.strategy}")
+    String selectedStrategy;
+
+    @Value("${proxy.host}")
+    String proxyHost;
+
+    @Value("${proxy.port}")
+    int proxyPort;
 
     @Autowired
     private ProductRepository productRepository;
@@ -83,18 +95,36 @@ public class StockTests {
         Assert.assertEquals(stock.getQuantity(), read.getQuantity());
         Assert.assertEquals(9, stockRepository.findAll().size());
 
+        read.setQuantity(0);
+        Stock updated = stockRepository.save(read);
+        Assert.assertNotNull(updated);
+        Assert.assertEquals(Integer.valueOf(0), updated.getQuantity());
+
         stockRepository.deleteStockByStockKey(stock.getStockKey());
         Assert.assertEquals(8, stockRepository.findAll().size());
     }
 
     @Test
     public void testSingleLocationStrategy() {
-        List<Location> locations = strategy.findLocation(getOrderDTO());
+        Location location = strategy.findLocation(getOrderDTO());
 
-        Assert.assertNotNull(locations);
-        Assert.assertEquals(1, locations.size());
-        Assert.assertEquals(Integer.valueOf(203), locations.get(0).getId());
-        Assert.assertEquals("Location 3", locations.get(0).getName());
+        Assert.assertNotNull(location);
+        if (!selectedStrategy.contains(WITH_PROXIMITY)) {
+            Assert.assertEquals(Integer.valueOf(202), location.getId());
+            Assert.assertEquals("Location 2", location.getName());
+        }
+    }
+
+    @Test
+    public void testSingleLocationWithProximityStrategy() {
+
+        Location location = strategy.findLocation(getOrderDTO());
+
+        Assert.assertNotNull(location);
+        if (selectedStrategy.contains(WITH_PROXIMITY)) {
+            Assert.assertEquals(Integer.valueOf(203), location.getId());
+            Assert.assertEquals("Location 3", location.getName());
+        }
     }
 
     @Test
@@ -121,7 +151,11 @@ public class StockTests {
         stockKey.setProduct(product);
         Stock stock = stockRepository.findStockByStockKey(stockKey);
         Assert.assertNotNull(stock);
-        Assert.assertEquals(Integer.valueOf(2), stock.getQuantity());
+        if (!selectedStrategy.contains(WITH_PROXIMITY)) {
+            Assert.assertEquals(Integer.valueOf(6), stock.getQuantity());
+        } else {
+            Assert.assertEquals(Integer.valueOf(2), stock.getQuantity());
+        }
     }
 
     @Test(expected = LocationNotFoundException.class)

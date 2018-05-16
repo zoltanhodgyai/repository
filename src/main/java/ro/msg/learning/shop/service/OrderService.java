@@ -3,7 +3,6 @@ package ro.msg.learning.shop.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.configuration.StrategyConfiguration;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.ProductDTO;
 import ro.msg.learning.shop.exception.LocationNotFoundException;
@@ -13,8 +12,6 @@ import ro.msg.learning.shop.repository.OrderDetailRepository;
 import ro.msg.learning.shop.repository.OrderRepository;
 import ro.msg.learning.shop.repository.StockRepository;
 import ro.msg.learning.shop.util.Strategy;
-
-import java.util.List;
 
 @Service
 public class OrderService {
@@ -48,12 +45,10 @@ public class OrderService {
     public Order createOrder(OrderDTO orderDTO) throws LocationNotFoundException {
 
         // get the single location where all of the products are found
-        List<Location> locations = strategy.findLocation(orderDTO);
-        if (locations == null || locations.isEmpty()) {
+        Location location = strategy.findLocation(orderDTO);
+        if (location == null) {
             throw new LocationNotFoundException("No location was found!");
         }
-        // TODO @hodgyaiz: now we know that we have only one location. The logic must be updated if another strategy is used
-        Location location = locations.get(0);
         // update the stock. Quantity must be updated
         for (ProductDTO product : orderDTO.getProducts()) {
             StockKey stockKey = new StockKey();

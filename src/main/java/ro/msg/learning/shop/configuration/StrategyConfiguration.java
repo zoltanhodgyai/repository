@@ -8,6 +8,7 @@ import ro.msg.learning.shop.repository.LocationRepository;
 import ro.msg.learning.shop.repository.StockRepository;
 import ro.msg.learning.shop.util.MultipleLocationStrategy;
 import ro.msg.learning.shop.util.SingleLocationStrategy;
+import ro.msg.learning.shop.util.SingleLocationWithProximityStrategy;
 import ro.msg.learning.shop.util.Strategy;
 
 @Configuration
@@ -15,6 +16,7 @@ public class StrategyConfiguration {
 
     private static final String SINGLE_LOCATION_STRATEGY = "SingleLocationStrategy";
     private static final String MULTIPLE_LOCATION_STRATEGY = "MultipleLocationStrategy";
+    private static final String SINGLE_LOCATION_WITH_PROXIMITY_STRATEGY = "SingleLocationWithProximityStrategy";
 
     private final StockRepository stockRepository;
 
@@ -33,6 +35,8 @@ public class StrategyConfiguration {
                     return new SingleLocationStrategy(stockRepository, locationRepository);
                 case MULTIPLE_LOCATION_STRATEGY:
                     return new MultipleLocationStrategy();
+                case SINGLE_LOCATION_WITH_PROXIMITY_STRATEGY:
+                    return new SingleLocationWithProximityStrategy(stockRepository, locationRepository);
                 default:
                     return new SingleLocationStrategy(stockRepository, locationRepository);
             }
