@@ -1,6 +1,5 @@
 package ro.msg.learning.shop.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,6 +51,8 @@ public class CustomerServiceRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
     public ResponseEntity<String> logout(@RequestParam String username) {
+        // todo @hodgyaiz: something happened. When I call the service the result is directly /login
+        // after that, when I try to do something the user is signed out.
         try {
             securityService.logout(username);
             return new ResponseEntity<>("User logged out!", HttpStatus.OK);
