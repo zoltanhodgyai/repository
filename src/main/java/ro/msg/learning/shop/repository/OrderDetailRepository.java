@@ -2,6 +2,7 @@ package ro.msg.learning.shop.repository;
 
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.model.OrderDetail;
 import ro.msg.learning.shop.model.OrderDetailKey;
 
@@ -20,5 +21,8 @@ public interface OrderDetailRepository extends Repository<OrderDetail, OrderDeta
 
     @Transactional
     void deleteOrderDetailByOrderDetailKey(OrderDetailKey orderDetailKey);
+
+    @Transactional
+    List<OrderDetail> findAllByOrderDetailKeyOrder(Order order);
 
 }

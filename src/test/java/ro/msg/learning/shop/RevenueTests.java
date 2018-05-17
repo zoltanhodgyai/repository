@@ -58,6 +58,8 @@ public class RevenueTests {
         Assert.assertEquals(5, revenueRepository.findAllByDateBefore(LocalDateTime.now()).size());
         Assert.assertEquals(2, revenueRepository.findAllByDateBefore(LocalDateTime.now().minusMonths(1)).size());
         Assert.assertEquals(1, revenueRepository.findAllByDateBefore(LocalDateTime.now().minusMonths(2).minusDays(15)).size());
+        Assert.assertEquals(1, revenueRepository.findAllByDateBetween(LocalDateTime.now().minusMonths(2).minusDays(15),
+                LocalDateTime.now().minusMonths(1)).size());
     }
 
     private void createRevenues() {

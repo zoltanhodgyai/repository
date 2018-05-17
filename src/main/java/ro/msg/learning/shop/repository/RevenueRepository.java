@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.repository;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.model.Revenue;
@@ -23,4 +24,10 @@ public interface RevenueRepository extends Repository<Revenue, Integer> {
 
     @Transactional(readOnly = true)
     List<Revenue> findAllByDateBefore(LocalDateTime date);
+
+    @Transactional(readOnly = true)
+    List<Revenue> findAllByDateBetween(LocalDateTime after, LocalDateTime before);
+
+    @Transactional(readOnly = true)
+    List<Revenue> findAllByDateBeforeAndDateAfter(LocalDateTime after, LocalDateTime before);
 }

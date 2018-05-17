@@ -81,9 +81,16 @@ public class OrderTests extends ShopTest {
 
         Assert.assertNotNull(orderRepository.save(secondOrder));
 
-        List<Order> orders = orderRepository.findAllOrOrderByOrderDateTimeIsBefore(LocalDateTime.now());
+        List<Order> orders = orderRepository.findAllByOrderDateTimeIsBefore(LocalDateTime.now());
         Assert.assertEquals(3, orders.size());
-        Assert.assertEquals(1, orderRepository.findAllOrOrderByOrderDateTimeIsBefore(LocalDateTime.now().minusYears(2)).size());
+        Assert.assertEquals(1, orderRepository.findAllByOrderDateTimeIsBefore(LocalDateTime.now().minusYears(2)).size());
+
+        Assert.assertEquals(1, orderRepository.findAllByOrderDateTimeAfterAndOrderDateTimeBefore(LocalDateTime.now().minusYears(1).plusMonths(1),
+                LocalDateTime.now()).size());
+        Assert.assertEquals(1, orderRepository.findAllByOrderDateTimeIsBetween(LocalDateTime.now().minusYears(1).plusMonths(1),
+                LocalDateTime.now()).size());
+
+
 
 
         orderRepository.deleteOrderById(read.getId());
