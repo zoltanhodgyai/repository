@@ -62,6 +62,7 @@ public class OrderService {
         Order order = new Order();
         order.setShippedFrom(location);
         order.setAddress(orderDTO.getDeliveryAddress());
+        order.setOrderDateTime(orderDTO.getOrderTime());
         String username = securityService.findLoggedInUsername();
         if (username == null) {
             throw new UsernameNotFoundException("User not found!");

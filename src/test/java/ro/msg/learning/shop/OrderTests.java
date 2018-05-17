@@ -1,7 +1,6 @@
 package ro.msg.learning.shop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,9 @@ import ro.msg.learning.shop.repository.AddressRepository;
 import ro.msg.learning.shop.repository.CustomerRepository;
 import ro.msg.learning.shop.repository.LocationRepository;
 import ro.msg.learning.shop.repository.OrderRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -58,6 +60,7 @@ public class OrderTests extends ShopTest {
         order.setShippedFrom(location);
         order.setCustomer(customer);
         order.setAddress(address);
+        order.setOrderDateTime(LocalDateTime.now());
 
         Order created = orderRepository.save(order);
         Assert.assertNotNull(created);
@@ -72,7 +75,18 @@ public class OrderTests extends ShopTest {
         Assert.assertEquals(created.getId(), read.getId());
         Assert.assertEquals(2, orderRepository.findAll().size());
 
+        Order secondOrder = read;
+        secondOrder.setOrderDateTime(read.getOrderDateTime().minusYears(1));
+        secondOrder.setId(null);
+
+        Assert.assertNotNull(orderRepository.save(secondOrder));
+
+        List<Order> orders = orderRepository.findAllOrOrderByOrderDateTimeIsBefore(LocalDateTime.now());
+        Assert.assertEquals(3, orders.size());
+        Assert.assertEquals(1, orderRepository.findAllOrOrderByOrderDateTimeIsBefore(LocalDateTime.now().minusYears(2)).size());
+
+
         orderRepository.deleteOrderById(read.getId());
-        Assert.assertEquals(1, orderRepository.findAll().size());
+        Assert.assertEquals(2, orderRepository.findAll().size());
     }
 }

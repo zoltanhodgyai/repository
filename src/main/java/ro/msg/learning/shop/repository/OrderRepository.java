@@ -4,6 +4,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.model.Order;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderRepository extends Repository<Order, Integer> {
@@ -19,4 +20,7 @@ public interface OrderRepository extends Repository<Order, Integer> {
 
     @Transactional
     void deleteOrderById(Integer id);
+
+    @Transactional
+    List<Order> findAllOrOrderByOrderDateTimeIsBefore(LocalDateTime localDateTime);
 }
