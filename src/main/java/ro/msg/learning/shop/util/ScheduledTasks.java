@@ -17,8 +17,8 @@ public class ScheduledTasks {
         this.revenueService = revenueService;
     }
 
+    //    @Scheduled(cron = "30 30 10 * * ?") // every day at 16:15:01 only an example but it works :D
     @Scheduled(cron = "59 59 23 * * ?") // every day at 23:59:59
-//    @Scheduled(cron = "01 15 16 * * ?") // every day at 16:15:01 only an example but it works :D
     public void reportCurrentTime() {
 
         log.info("Sales revenue created at: " + LocalDateTime.now());
