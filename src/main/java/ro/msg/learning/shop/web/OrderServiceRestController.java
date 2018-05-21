@@ -23,7 +23,6 @@ public class OrderServiceRestController {
     ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
         Order order = orderService.createOrder(orderDTO);
 
-        //order.getShippedFrom().setAddress(null);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 

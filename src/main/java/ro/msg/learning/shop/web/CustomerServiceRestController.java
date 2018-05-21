@@ -35,7 +35,9 @@ public class CustomerServiceRestController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-        response.addCookie(new Cookie("X-CSRF-TOKEN", csrfToken.getToken()));
+        if (response != null && csrfToken != null) {
+            response.addCookie(new Cookie("X-CSRF-TOKEN", csrfToken.getToken()));
+        }
         try {
             securityService.login(username, password);
             return new ResponseEntity<>(String.format("Login for user %s successfully!", username), HttpStatus.OK);
