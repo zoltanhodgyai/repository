@@ -16,7 +16,7 @@ public class ProductCategoryServletConfiguration {
     @Bean
     @SuppressWarnings("unchecked")
     public ServletRegistrationBean productServlet() {
-        ServletRegistrationBean bean = new ServletRegistrationBean(new ProductCategoryServlet(productCategoryServiceFactory), "/productServlet/*");
+        ServletRegistrationBean bean = new ServletRegistrationBean(new ProductCategoryServlet(productCategoryServiceFactory), "/ProductServlet.svc/*");
         bean.setLoadOnStartup(1);
         return bean;
     }
