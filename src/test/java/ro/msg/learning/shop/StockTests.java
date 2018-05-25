@@ -81,16 +81,14 @@ public class StockTests {
         Assert.assertNotNull(product);
 
         Stock stock = new Stock();
-        StockKey stockKey = new StockKey();
-        stockKey.setProduct(product);
-        stockKey.setLocation(location);
-        stock.setStockKey(stockKey);
+        stock.setProduct(product);
+        stock.setLocation(location);
         stock.setQuantity(12);
 
         Stock created = stockRepository.save(stock);
         Assert.assertNotNull(created);
 
-        Stock read = stockRepository.findStockByStockKey(stock.getStockKey());
+        Stock read = stockRepository.findStockByProductAndLocation(stock.getProduct(), stock.getLocation());
         Assert.assertNotNull(read);
         Assert.assertEquals(stock.getQuantity(), read.getQuantity());
         Assert.assertEquals(9, stockRepository.findAll().size());
@@ -100,7 +98,7 @@ public class StockTests {
         Assert.assertNotNull(updated);
         Assert.assertEquals(Integer.valueOf(0), updated.getQuantity());
 
-        stockRepository.deleteStockByStockKey(stock.getStockKey());
+        stockRepository.deleteStockByProductAndLocation(stock.getProduct(), stock.getLocation());
         Assert.assertEquals(8, stockRepository.findAll().size());
     }
 
@@ -146,10 +144,7 @@ public class StockTests {
 
         Product product = productRepository.findProductById(201);
         Location location = locationRepository.findLocationById(203);
-        StockKey stockKey = new StockKey();
-        stockKey.setLocation(location);
-        stockKey.setProduct(product);
-        Stock stock = stockRepository.findStockByStockKey(stockKey);
+        Stock stock = stockRepository.findStockByProductAndLocation(product, location);
         Assert.assertNotNull(stock);
         if (!selectedStrategy.contains(WITH_PROXIMITY)) {
             Assert.assertEquals(Integer.valueOf(6), stock.getQuantity());

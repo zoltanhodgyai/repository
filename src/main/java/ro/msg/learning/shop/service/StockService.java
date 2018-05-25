@@ -20,6 +20,6 @@ public class StockService {
     }
 
     public List<Stock> exportStocks(Integer locationId) {
-        return stockRepository.findAllByStockKeyLocation(locationRepository.findLocationById(locationId));
+        return stockRepository.findAllByLocation(locationRepository.findLocationById(locationId));
     }
 }

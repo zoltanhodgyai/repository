@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dto.OrderDTO;
 import ro.msg.learning.shop.dto.ProductDTO;
 import ro.msg.learning.shop.exception.LocationNotFoundException;
-import ro.msg.learning.shop.model.*;
+import ro.msg.learning.shop.model.Location;
+import ro.msg.learning.shop.model.Order;
+import ro.msg.learning.shop.model.OrderDetail;
+import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.CustomerRepository;
 import ro.msg.learning.shop.repository.OrderDetailRepository;
 import ro.msg.learning.shop.repository.OrderRepository;
@@ -51,10 +54,7 @@ public class OrderService {
         }
         // update the stock. Quantity must be updated
         for (ProductDTO product : orderDTO.getProducts()) {
-            StockKey stockKey = new StockKey();
-            stockKey.setProduct(product.getProduct());
-            stockKey.setLocation(location);
-            Stock stock = stockRepository.findStockByStockKey(stockKey);
+            Stock stock = stockRepository.findStockByProductAndLocation(product.getProduct(), location);
             stock.setQuantity(stock.getQuantity() - product.getQuantity());
             stockRepository.save(stock);
         }
@@ -72,11 +72,9 @@ public class OrderService {
         // save the Order Details (for every product)
         for (ProductDTO product : orderDTO.getProducts()) {
             OrderDetail orderDetail = new OrderDetail();
-            OrderDetailKey orderDetailKey = new OrderDetailKey();
-            orderDetailKey.setProduct(product.getProduct());
-            orderDetailKey.setOrder(order);
+            orderDetail.setProduct(product.getProduct());
+            orderDetail.setOrder(order);
             orderDetail.setQuantity(product.getQuantity());
-            orderDetail.setOrderDetailKey(orderDetailKey);
             orderDetailRepository.save(orderDetail);
         }
 

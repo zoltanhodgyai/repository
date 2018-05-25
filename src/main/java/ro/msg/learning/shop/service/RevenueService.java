@@ -39,9 +39,9 @@ public class RevenueService {
         Map<Integer, Revenue> revenuesWithLocationsMap = new HashMap<>();
         for (Order order : orderRepository.findAllByOrderDateTimeIsBetween(date.minusDays(1), date)) {
             Double sum = 0.0;
-            for (OrderDetail orderDetail : orderDetailRepository.findAllByOrderDetailKeyOrder(order)) {
+            for (OrderDetail orderDetail : orderDetailRepository.findAllByOrder(order)) {
                 sum = sum + (Double.valueOf(orderDetail.getQuantity()) *
-                        productRepository.findProductById(orderDetail.getOrderDetailKey().getProduct().getId()).getPrice().doubleValue());
+                        productRepository.findProductById(orderDetail.getProduct().getId()).getPrice().doubleValue());
             }
             Revenue revenue;
             if (revenuesWithLocationsMap.get(order.getShippedFrom().getId()) == null) {

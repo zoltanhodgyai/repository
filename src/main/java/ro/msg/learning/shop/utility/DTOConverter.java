@@ -5,7 +5,6 @@ import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.model.Product;
 import ro.msg.learning.shop.model.Stock;
-import ro.msg.learning.shop.model.StockKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +13,13 @@ public class DTOConverter {
 
     public static StockDTO toStockDTO(Stock stock) {
         StockDTO stockDTO = new StockDTO();
-        stockDTO.setLocationId(stock.getStockKey().getLocation().getId());
-        stockDTO.setProductId(stock.getStockKey().getProduct().getId());
+        stockDTO.setLocationId(stock.getLocation().getId());
+        stockDTO.setProductId(stock.getProduct().getId());
         stockDTO.setQuantity(stock.getQuantity());
         try {
-            stockDTO.setLocationName(stock.getStockKey().getLocation().getName());
-            stockDTO.setProductName(stock.getStockKey().getProduct().getName());
-            stockDTO.setProductPrice(stock.getStockKey().getProduct().getPrice());
+            stockDTO.setLocationName(stock.getLocation().getName());
+            stockDTO.setProductName(stock.getProduct().getName());
+            stockDTO.setProductPrice(stock.getProduct().getPrice());
         } catch (LazyInitializationException e) {
             // do nothing
         }
@@ -38,13 +37,11 @@ public class DTOConverter {
     public static Stock fromStockDTO(StockDTO stockDTO) {
 
         Stock stock = new Stock();
-        StockKey stockKey = new StockKey();
         stock.setQuantity(stockDTO.getQuantity());
-        stockKey.setProduct(new Product());
-        stockKey.getProduct().setId(stockDTO.getProductId());
-        stockKey.setLocation(new Location());
-        stockKey.getLocation().setId(stockDTO.getLocationId());
-        stock.setStockKey(stockKey);
+        stock.setProduct(new Product());
+        stock.getProduct().setId(stockDTO.getProductId());
+        stock.setLocation(new Location());
+        stock.getLocation().setId(stockDTO.getLocationId());
 
         return stock;
     }
