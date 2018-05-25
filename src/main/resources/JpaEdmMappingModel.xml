@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<JPAEDMMappingModel xmlns="http://www.apache.org/olingo/odata2/jpa/processor/api/model/mapping">
+    <PersistenceUnit name="shop">
+        <JPAEntityTypes>
+            <JPAEntityType name="Order">
+                <JPAAttributes>
+                    <JPAAttribute name="id">ID</JPAAttribute>
+                    <JPAAttribute name="shippedFrom">ShippedFrom</JPAAttribute>
+                    <JPAAttribute name="customer">Customer</JPAAttribute>
+                    <JPAAttribute name="address">Address</JPAAttribute>
+                    <JPAAttribute name="orderDateTime" exclude="true">Order date</JPAAttribute>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Revenue" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="ProductCategory" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Supplier" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Customer" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Stock" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Location" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="Address" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+            <JPAEntityType name="ShopOrder" exclude="true">
+                <JPAAttributes>
+                </JPAAttributes>
+                <JPARelationships>
+                </JPARelationships>
+            </JPAEntityType>
+        </JPAEntityTypes>
+        <JPAEmbeddableTypes>
+        </JPAEmbeddableTypes>
+    </PersistenceUnit>
+</JPAEDMMappingModel>
