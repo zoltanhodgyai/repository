@@ -26,8 +26,6 @@ import java.util.List;
 @RequestMapping("/stockService")
 public class StockServiceRestController {
 
-    private static final String FILE_NAME = "exportedStocks.csv";
-
     private final StockService stockService;
 
     private final LocationRepository locationRepository;
