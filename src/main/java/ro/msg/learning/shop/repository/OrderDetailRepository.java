@@ -23,12 +23,9 @@ public interface OrderDetailRepository extends Repository<OrderDetail, Integer> 
     OrderDetail findOrderDetailByOrderAndProduct(Order order, Product product);
 
     @Transactional
-    void deleteOrderDetailById(Integer id);
-
-    @Transactional
     void deleteOrderDetailByOrderAndProduct(Order order, Product product);
 
-    @Transactional
+    @Transactional(readOnly = true)
     List<OrderDetail> findAllByOrder(Order order);
 
 }

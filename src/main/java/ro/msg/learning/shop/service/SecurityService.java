@@ -7,10 +7,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.exception.UserNotLoggedInException;
 
 @Slf4j
 @Service
+@Transactional
 public class SecurityService {
 
     private final AuthenticationManager authenticationManager;

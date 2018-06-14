@@ -2,6 +2,7 @@ package ro.msg.learning.shop.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.exception.UsernameAlreadyInUseException;
 import ro.msg.learning.shop.model.Customer;
 import ro.msg.learning.shop.repository.CustomerRepository;
@@ -9,6 +10,7 @@ import ro.msg.learning.shop.repository.CustomerRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerRepository customerRepository;

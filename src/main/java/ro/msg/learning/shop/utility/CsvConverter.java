@@ -12,8 +12,11 @@ import java.util.List;
 
 public class CsvConverter {
 
+    private CsvConverter() {
+    }
+
     @SuppressWarnings("unchecked")
-    public static <T> List<T> fromCsv(InputStream inputStream, Class<T> clazz, T type) throws IOException {
+    public static <T> List<T> fromCsv(InputStream inputStream, Class<T> clazz) throws IOException {
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
         MappingIterator<T> it = mapper.readerFor(clazz)
@@ -26,12 +29,11 @@ public class CsvConverter {
         return result;
     }
 
-    public static <T> void toCsv(OutputStream outputStream, Class<T> clazz, T type, List<T> pojos) throws IOException {
+    public static <T> void toCsv(OutputStream outputStream, Class<T> clazz, List<T> pojos) throws IOException {
 
         CsvMapper mapper = new CsvMapper();
 
-        // todo @hodgyaiz: how could I use in CsvHandler the actual type instead of null???
-        CsvSchema schema = mapper.schemaFor(pojos.get(0).getClass());
+        CsvSchema schema = mapper.schemaFor(clazz);
 
         mapper.writer(schema.withUseHeader(true)).writeValue(outputStream, pojos);
     }

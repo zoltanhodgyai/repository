@@ -1,6 +1,8 @@
 package ro.msg.learning.shop.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.model.OrderDetail;
 import ro.msg.learning.shop.model.Revenue;
@@ -11,12 +13,13 @@ import ro.msg.learning.shop.repository.RevenueRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RevenueService {
 
     private final RevenueRepository revenueRepository;
@@ -35,8 +38,7 @@ public class RevenueService {
     }
 
     public List<Revenue> aggregateSalesRevenuesForDate(LocalDateTime date) {
-        List<Revenue> result = new ArrayList<>();
-        Map<Integer, Revenue> revenuesWithLocationsMap = new HashMap<>();
+        Map<Location, Revenue> revenuesWithLocationsMap = new HashMap<>();
         for (Order order : orderRepository.findAllByOrderDateTimeIsBetween(date.minusDays(1), date)) {
             Double sum = 0.0;
             for (OrderDetail orderDetail : orderDetailRepository.findAllByOrder(order)) {
@@ -44,21 +46,18 @@ public class RevenueService {
                         productRepository.findProductById(orderDetail.getProduct().getId()).getPrice().doubleValue());
             }
             Revenue revenue;
-            if (revenuesWithLocationsMap.get(order.getShippedFrom().getId()) == null) {
+            if (revenuesWithLocationsMap.get(order.getShippedFrom()) == null) {
                 revenue = new Revenue();
                 revenue.setSum(BigDecimal.valueOf(sum));
 
-                revenuesWithLocationsMap.put(order.getShippedFrom().getId(), revenue);
+                revenuesWithLocationsMap.put(order.getShippedFrom(), revenue);
             } else {
-                revenue = revenuesWithLocationsMap.get(order.getShippedFrom().getId());
+                revenue = revenuesWithLocationsMap.get(order.getShippedFrom());
                 revenue.setSum(revenue.getSum().add(BigDecimal.valueOf(sum)));
             }
             revenue.setDate(date);
-            revenue.setLocation(order.getShippedFrom().getId());
+            revenue.setLocation(order.getShippedFrom());
         }
-        for (Revenue revenue : revenuesWithLocationsMap.values()) {
-            result.add(revenueRepository.save(revenue));
-        }
-        return result;
+        return revenuesWithLocationsMap.values().stream().map(revenueRepository::save).collect(Collectors.toList());
     }
 }

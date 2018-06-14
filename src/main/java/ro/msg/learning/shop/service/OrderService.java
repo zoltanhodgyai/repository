@@ -1,10 +1,9 @@
 package ro.msg.learning.shop.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.dto.OrderDTO;
-import ro.msg.learning.shop.dto.ProductDTO;
 import ro.msg.learning.shop.exception.LocationNotFoundException;
 import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.model.Order;
@@ -17,10 +16,8 @@ import ro.msg.learning.shop.repository.StockRepository;
 import ro.msg.learning.shop.util.Strategy;
 
 @Service
+@Transactional
 public class OrderService {
-
-    @Value("${shop.strategy}")
-    String strategyType;
 
     private final StockRepository stockRepository;
 
@@ -45,7 +42,7 @@ public class OrderService {
         this.strategy = strategy;
     }
 
-    public Order createOrder(OrderDTO orderDTO) throws LocationNotFoundException {
+    public Order createOrder(OrderDTO orderDTO) {
 
         // get the single location where all of the products are found
         Location location = strategy.findLocation(orderDTO);
@@ -53,11 +50,13 @@ public class OrderService {
             throw new LocationNotFoundException("No location was found!");
         }
         // update the stock. Quantity must be updated
-        for (ProductDTO product : orderDTO.getProducts()) {
-            Stock stock = stockRepository.findStockByProductAndLocation(product.getProduct(), location);
-            stock.setQuantity(stock.getQuantity() - product.getQuantity());
-            stockRepository.save(stock);
-        }
+        orderDTO.getProducts().forEach(
+                product -> {
+                    Stock stock = stockRepository.findStockByProductAndLocation(product.getProduct(), location);
+                    stock.setQuantity(stock.getQuantity() - product.getQuantity());
+                    stockRepository.save(stock);
+                }
+        );
         // save the new Order
         Order order = new Order();
         order.setShippedFrom(location);
@@ -68,15 +67,11 @@ public class OrderService {
             throw new UsernameNotFoundException("User not found!");
         }
         order.setCustomer(customerRepository.findCustomerByUsername(username));
-        order = orderRepository.save(order);
+        final Order savedOrder = orderRepository.save(order);
         // save the Order Details (for every product)
-        for (ProductDTO product : orderDTO.getProducts()) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(product.getProduct());
-            orderDetail.setOrder(order);
-            orderDetail.setQuantity(product.getQuantity());
-            orderDetailRepository.save(orderDetail);
-        }
+        orderDTO.getProducts().forEach(
+                product -> orderDetailRepository.save(new OrderDetail(null, savedOrder, product.getProduct(), product.getQuantity()))
+        );
 
         return order;
     }

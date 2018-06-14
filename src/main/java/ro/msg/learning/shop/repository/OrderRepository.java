@@ -21,12 +21,12 @@ public interface OrderRepository extends Repository<Order, Integer> {
     @Transactional
     void deleteOrderById(Integer id);
 
-    @Transactional
+    @Transactional(readOnly = true)
     List<Order> findAllByOrderDateTimeIsBefore(LocalDateTime localDateTime);
 
-    @Transactional
+    @Transactional(readOnly = true)
     List<Order> findAllByOrderDateTimeIsBetween(LocalDateTime from, LocalDateTime to);
 
-    @Transactional
+    @Transactional(readOnly = true)
     List<Order> findAllByOrderDateTimeAfterAndOrderDateTimeBefore(LocalDateTime after, LocalDateTime before);
 }

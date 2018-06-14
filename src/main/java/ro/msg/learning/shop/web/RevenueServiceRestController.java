@@ -1,7 +1,7 @@
 package ro.msg.learning.shop.web;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.model.Revenue;
 import ro.msg.learning.shop.service.RevenueService;
@@ -20,11 +20,10 @@ public class RevenueServiceRestController {
         this.revenueService = revenueService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Revenue>> aggregateSalesRevenuesForDate(@RequestParam String date) {
-        LocalDateTime dateTime = LocalDateTime.parse(date);
-        List<Revenue> result = revenueService.aggregateSalesRevenuesForDate(dateTime);
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Revenue> aggregateSalesRevenuesForDate(@RequestParam
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return revenueService.aggregateSalesRevenuesForDate(dateTime);
     }
 }

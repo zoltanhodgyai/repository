@@ -19,11 +19,11 @@ public class OrderServiceRestController {
         this.orderService = orderService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
+    @PostMapping
+    Order createOrder(@RequestBody OrderDTO orderDTO) {
         Order order = orderService.createOrder(orderDTO);
 
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        return order;
     }
 
     @ExceptionHandler(LocationNotFoundException.class)

@@ -69,7 +69,7 @@ public class AddressTests extends ShopTest{
 
         addressRepository.deleteAddressById(addresses.get(2).getId());
 
-        Assert.assertEquals(8, addressRepository.findAll().size());
+        Assert.assertEquals(9, addressRepository.findAll().size());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class AddressTests extends ShopTest{
         List<Address> addresses = createAddresses();
         Assert.assertEquals(3, addresses.size());
 
-        Assert.assertEquals(9, addressRepository.findAll().size());
+        Assert.assertEquals(10, addressRepository.findAll().size());
 
     }
 

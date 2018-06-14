@@ -1,0 +1,11 @@
+alter table location add constraint FK_location_address foreign key (address) references address;
+alter table order_detail add constraint FK_order_detail_order foreign key (order_number) references order_table;
+alter table order_detail add constraint FK_order_detail_product foreign key (product_number) references product;
+alter table order_table add constraint FK_order_address foreign key (address) references address;
+alter table order_table add constraint FK_order_customer foreign key (customer) references customer;
+alter table order_table add constraint FK_order_location foreign key (shipped_from) references location;
+alter table product add constraint FK_product_product_category foreign key (product_category) references product_category;
+alter table product add constraint FK_product_supplier foreign key (supplier) references supplier;
+alter table revenue add constraint FK_revenue_location foreign key (location) references location;
+alter table stock add constraint FK_stock_location foreign key (location_number) references location;
+alter table stock add constraint FK_stock_product foreign key (product_number) references product;

@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class Location {
+public class Location implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +19,7 @@ public class Location {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToOne
     @JoinColumn(name = "address")
     private Address address;
 

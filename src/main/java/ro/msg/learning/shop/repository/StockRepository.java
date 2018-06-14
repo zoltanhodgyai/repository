@@ -18,12 +18,6 @@ public interface StockRepository extends Repository<Stock, Integer> {
     @Transactional(readOnly = true)
     List<Stock> findAll();
 
-    @Transactional(readOnly = true)
-    Stock findStockById(Integer id);
-
-    @Transactional
-    void deleteStockById(Integer id);
-
     @Transactional
     void deleteStockByProductAndLocation(Product product, Location location);
 
@@ -31,9 +25,16 @@ public interface StockRepository extends Repository<Stock, Integer> {
     Stock findStockByProductAndLocation(Product product, Location location);
 
     @Transactional(readOnly = true)
-    @Query(value = "SELECT LOCATION_NUMBER FROM STOCK WHERE PRODUCT_NUMBER = :product AND QUANTITY >= :quantity", nativeQuery = true)
+    List<Stock> findAllByLocation(Location location);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT s.location.id FROM Stock s WHERE s.product.id = :product AND s.quantity >= :quantity")
     List<Integer> findLocationIdsByProductAndQuantity(@Param("product") Integer productNumber, @Param("quantity") Integer quantity);
 
     @Transactional(readOnly = true)
-    List<Stock> findAllByLocation(Location location);
+    @Query(value = "SELECT s.location.id FROM Stock s WHERE s.product.id = :product AND s.quantity >= :quantity AND s.location.id IN (:locations)")
+    List<Integer> findLocationIdsByProductAndQuantityAndLocationIds(@Param("product") Integer productNumber,
+                                                                    @Param("quantity") Integer quantity,
+                                                                    @Param("locations") List<Integer> locations);
+
 }

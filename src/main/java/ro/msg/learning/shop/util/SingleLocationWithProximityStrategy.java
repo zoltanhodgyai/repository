@@ -23,21 +23,14 @@ import java.util.List;
 @Slf4j
 public class SingleLocationWithProximityStrategy extends SingleLocation implements Strategy {
 
-    @Value("${google.api.key}")
-    String apiKey;
-
     @Value("${proxy.host}")
     String proxyHost;
 
     @Value("${proxy.port}")
     int proxyPort;
 
-    @Value("${google.url}")
-    String googleUrl;
-
-    @Value("${google.units}")
-    String units;
-
+    @Value("${google.distance.url}")
+    String url;
 
     private StockRepository stockRepository;
 
@@ -63,9 +56,10 @@ public class SingleLocationWithProximityStrategy extends SingleLocation implemen
         RestTemplate restTemplate = new RestTemplate(request);
 
         String deliveryAddress = getAddressConformGoogle(orderDTO.getDeliveryAddress());
-        String url = googleUrl + "units=" + units + "&origins=" + getOrigins(locations) + "&destinations=" + deliveryAddress + "&key=" + apiKey;
 
-        LocationDTO locationDTO = restTemplate.getForObject(url, LocationDTO.class);
+        String googleUrl = url.replace("{originsParam}", getOrigins(locations)).replace("{destinationsParam}", deliveryAddress);
+
+        LocationDTO locationDTO = restTemplate.getForObject(googleUrl, LocationDTO.class);
         return getFinalLocation(locationDTO, locations);
     }
 

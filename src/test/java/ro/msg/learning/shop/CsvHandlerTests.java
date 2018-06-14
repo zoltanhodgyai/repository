@@ -14,11 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dto.StockDTO;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.StockRepository;
-import ro.msg.learning.shop.utility.DTOConverter;
 import ro.msg.learning.shop.utility.CsvConverter;
 
 import java.io.*;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -37,14 +35,14 @@ public class CsvHandlerTests {
         List<Stock> stocks = stockRepository.findAll();
 
         OutputStream outputStream =  new FileOutputStream("test.csv");
-        CsvConverter.toCsv(outputStream, StockDTO.class, new StockDTO(), DTOConverter.toStockDTOS(stocks));
+        CsvConverter.toCsv(outputStream, StockDTO.class, StockDTO.toStockDTOS(stocks));
     }
 
     @Test
     public void testReadCsv() throws IOException {
         InputStream inputStream = new FileInputStream("test.csv");
 
-        List<StockDTO> stocks = CsvConverter.fromCsv(inputStream, StockDTO.class, new StockDTO());
+        List<StockDTO> stocks = CsvConverter.fromCsv(inputStream, StockDTO.class);
 
         Assert.assertNotNull(stocks);
         Assert.assertEquals(8, stocks.size());

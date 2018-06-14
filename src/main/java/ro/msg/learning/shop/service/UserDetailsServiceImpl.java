@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service(value = "userService")
+@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private static final String CUSTOMER_ROLE = "CustomerRole";

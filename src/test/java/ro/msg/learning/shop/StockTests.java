@@ -30,7 +30,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 @Sql({"/test.sql"})
 @Slf4j
 public class StockTests {
@@ -146,11 +146,7 @@ public class StockTests {
         Location location = locationRepository.findLocationById(203);
         Stock stock = stockRepository.findStockByProductAndLocation(product, location);
         Assert.assertNotNull(stock);
-        if (!selectedStrategy.contains(WITH_PROXIMITY)) {
-            Assert.assertEquals(Integer.valueOf(6), stock.getQuantity());
-        } else {
-            Assert.assertEquals(Integer.valueOf(2), stock.getQuantity());
-        }
+        Assert.assertEquals(Integer.valueOf(6), stock.getQuantity());
     }
 
     @Test(expected = LocationNotFoundException.class)
@@ -167,6 +163,18 @@ public class StockTests {
         Assert.assertNotNull(exported);
         Assert.assertEquals(3, exported.size());
     }
+
+    @Test
+    public void testFindLocationIdsByProductAndQuantity() {
+
+        List<Integer> locationIds = stockRepository.findLocationIdsByProductAndQuantity(202, 5);
+
+        Assert.assertNotNull(locationIds);
+        Assert.assertEquals(2, locationIds.size());
+
+        Assert.assertEquals(3, stockRepository.findLocationIdsByProductAndQuantity(203, 1).size());
+    }
+
 
     private OrderDTO getOrderDTO() {
         OrderDTO orderDTO = new OrderDTO();

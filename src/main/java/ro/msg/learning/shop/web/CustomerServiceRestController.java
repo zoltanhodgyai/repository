@@ -1,8 +1,6 @@
 package ro.msg.learning.shop.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.exception.UserNotLoggedInException;
@@ -12,7 +10,6 @@ import ro.msg.learning.shop.service.CustomerService;
 import ro.msg.learning.shop.service.SecurityService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 @RestController
@@ -28,41 +25,41 @@ public class CustomerServiceRestController {
         this.customerService = customerService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
+    public String login(HttpServletRequest request) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         try {
             securityService.login(username, password);
-            return new ResponseEntity<>(String.format("Login for user %s successfully!", username), HttpStatus.OK);
+            return String.format("Login for user %s successful!", username);
         } catch (UsernameNotFoundException e) {
-            return new ResponseEntity<>("Username or password not correct!", HttpStatus.OK);
+            return "Username or password not correct!";
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/registration")
-    public ResponseEntity<String> registration(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
+    @RequestMapping(method = RequestMethod.POST, value = "/registration")
+    public String registration(HttpServletRequest request) {
         Customer customer = new Customer();
-        customer.setFirstName(firstName);
-        customer.setLastName(lastName);
-        customer.setUsername(firstName.toLowerCase() + "." + lastName.toLowerCase());
-        customer.setPassword(password);
+        customer.setFirstName(request.getParameter("firstName"));
+        customer.setLastName(request.getParameter("lastName"));
+        customer.setUsername(customer.getFirstName().toLowerCase() + "." + customer.getLastName().toLowerCase());
+        customer.setPassword(request.getParameter("password"));
 
         try {
             customerService.save(customer);
-            return new ResponseEntity<>(String.format("Customer created with username %s successfully!", customer.getUsername()), HttpStatus.OK);
+            return String.format("Customer created with username %s successfully!", customer.getUsername());
         } catch (UsernameAlreadyInUseException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return e.getMessage();
         }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
-    public ResponseEntity<String> logout(@RequestParam String username) {
+    public String logout(@RequestParam String username) {
         try {
             securityService.logout(username);
-            return new ResponseEntity<>("User logged out!", HttpStatus.OK);
+            return "User logged out!";
         } catch (UserNotLoggedInException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return e.getMessage();
         }
     }
 }

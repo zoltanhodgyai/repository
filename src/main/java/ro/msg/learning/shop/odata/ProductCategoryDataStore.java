@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.model.ProductCategory;
 import ro.msg.learning.shop.repository.ProductCategoryRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductCategoryDataStore {
@@ -26,14 +26,8 @@ public class ProductCategoryDataStore {
     }
 
     List<Map<String, Object>> getProductCategories() {
-        List<Map<String, Object>> result = new ArrayList<>();
 
-        List<ProductCategory> productCategories = productCategoryRepository.findAll();
-
-        for (ProductCategory productCategory : productCategories) {
-            result.add(createProductCategory(productCategory));
-        }
-        return result;
+        return productCategoryRepository.findAll().stream().map(this::createProductCategory).collect(Collectors.toList());
     }
 
     Map<String, Object> saveProductCategory(final ProductCategory productCategory) {

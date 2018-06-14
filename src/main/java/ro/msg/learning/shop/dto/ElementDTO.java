@@ -3,11 +3,11 @@ package ro.msg.learning.shop.dto;
 import lombok.Data;
 
 @Data
-public class Element {
+public class ElementDTO {
 
-    private Distance distance;
+    private DistanceDTO distance;
 
-    private Duration duration;
+    private DurationDTO duration;
 
     private String status;
 }

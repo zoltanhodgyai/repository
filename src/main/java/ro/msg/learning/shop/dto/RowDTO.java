@@ -3,7 +3,7 @@ package ro.msg.learning.shop.dto;
 import lombok.Data;
 
 @Data
-public class Row {
+public class RowDTO {
 
-    private Element[] elements;
+    private ElementDTO[] elements;
 }

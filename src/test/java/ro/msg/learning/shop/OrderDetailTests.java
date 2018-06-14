@@ -39,7 +39,7 @@ public class OrderDetailTests extends ShopTest {
         Product product = productRepository.findProductById(100);
         Assert.assertNotNull(product);
 
-        OrderDetail orderDetail = new OrderDetail();
+        OrderDetail orderDetail = new OrderDetail(null, order, product, 12);
         orderDetail.setOrder(order);
         orderDetail.setProduct(product);
         orderDetail.setQuantity(12);

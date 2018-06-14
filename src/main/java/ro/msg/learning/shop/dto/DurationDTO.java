@@ -3,7 +3,7 @@ package ro.msg.learning.shop.dto;
 import lombok.Data;
 
 @Data
-public class Distance {
+public class DurationDTO {
 
     private String text;
 

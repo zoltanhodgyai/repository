@@ -9,5 +9,5 @@ public class LocationDTO {
 
     private String[] origin_addresses;
 
-    private Row[] rows;
+    private RowDTO[] rows;
 }
